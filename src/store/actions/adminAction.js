@@ -1,5 +1,8 @@
 import actionTypes from './actionTypes';
-import { getAllCodeService, createNewUserService, getAllUsers, deleteUserService, editUserService, getTopDoctorHomeService } from '../../services/userService'
+import {
+    getAllCodeService, createNewUserService, getAllUsers, deleteUserService,
+    editUserService, getTopDoctorHomeService, getAllDoctors, saveDetailDoctors
+} from '../../services/userService'
 import { toast } from 'react-toastify';
 
 //Gender
@@ -227,3 +230,51 @@ export const fetchTopDoctor = () => {
     }
 }
 //Fetch Doctor HomePage
+
+//Fetch All Doctor
+export const fetchAllDoctors = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllDoctors();
+            if (res && res.errCode === 0) {
+                dispatch({
+                    type: actionTypes.FETCH_ALL_DOCTORS_SUCCESS,
+                    dataDr: res.data
+                })
+            } else {
+                dispatch({
+                    type: actionTypes.FETCH_ALL_DOCTORS_FAILED,
+                })
+            }
+        } catch (e) {
+            console.log('FETCH_ALL_DOCTORS_FAILED', e);
+            dispatch({
+                type: actionTypes.FETCH_ALL_DOCTORS_FAILED,
+            })
+        }
+    }
+}
+//Fetch All Doctor
+
+//Save Detail Doctor
+export const saveDetailDoctor = (data) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await saveDetailDoctors(data);
+            if (res && res.errCode === 0) {
+                toast.success("Create a detail doctor success !")
+                dispatch({
+                    type: actionTypes.SAVE_DETAIL_DOCTORS_SUCCESS,
+                });
+            } else {
+                toast.error("Create detail doctor failed !");
+                dispatch({ type: actionTypes.SAVE_DETAIL_DOCTORS_FAILED });
+            }
+        } catch (e) {
+            toast.error("Create detail doctor failed !");
+            dispatch({ type: actionTypes.SAVE_DETAIL_DOCTORS_FAILED });
+            console.log('error', e);
+        }
+    }
+}
+//Save Detail Doctor
